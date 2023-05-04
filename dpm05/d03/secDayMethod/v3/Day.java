@@ -1,7 +1,6 @@
-package dpm05.d03.secDayMethod.v2;
+package dpm05.d03.secDayMethod.v3;
 
-import java.util.GregorianCalendar;
-import static java.util.GregorianCalendar.*;
+import java.time.LocalDateTime;
 
 public class Day {
 	private int year = 1;
@@ -36,6 +35,13 @@ public class Day {
 		return d > dMax ? dMax : d;
 	}
 
+    public Day() {
+        LocalDateTime now = LocalDateTime.now();
+        this.year = now.getYear();
+        this.month = now.getMonthValue();
+        this.date = now.getDayOfMonth();
+    }
+	
 	public Day(int year) {
 		this.year = year;
 	}
@@ -60,7 +66,7 @@ public class Day {
 
 	public void setYear(int year) {
 		this.year = year;
-		this.date = adjustedDay(year, this.month, date);
+		this.date = adjustedDay(year, month, date);
 	}
 
 	public int getMonth() {
@@ -68,7 +74,7 @@ public class Day {
 	}
 
 	public void setMonth(int month) {
-		this.month = month;
+		this.month = adjustedMonth(month);
 		this.date = adjustedDay(year, this.month, date);
 	}
 
@@ -77,8 +83,7 @@ public class Day {
 	}
 
 	public void setDate(int date) {
-		this.date = date;
-		this.date = adjustedDay(year, this.month, date);
+		this.date = adjustedDay(year, month, date);
 	}
 
 	public void set(int year, int month, int date) {
@@ -112,7 +117,8 @@ public class Day {
 		String[] wd = {"일", "월", "화", "수", "목", "금", "토"};
 		return String.format("%04d년%02d월%02d일(%s)", year, month, date, wd[dayOfWeek()]);
 	}
-	
+
+	//--연내 경과 일수--//
 	public int dayOfYear() {
 		int days = date;
 		for (int i = 1; i < month; i++) 
@@ -134,13 +140,14 @@ public class Day {
 	public static int compare(Day d1, Day d2) {
 		if(d1.year > d2.year) return 1;
 		if(d1.year < d2.year) return -1;
-		
+
 		if(d1.month > d2.month) return 1;
 		if(d1.month < d2.month) return -1;
 		
 		return d1.date > d2.date ? 1 : d1.date < d2.date ? -1 : 0;
 	}
 	
+	//--날짜를 하루 뒤로 변경--//
 	public void succeed() {
 		if (date < dayOfMonth(year, month))
 			date++;
@@ -152,6 +159,7 @@ public class Day {
 			date =1;
 		}
 	}
+	
 	//--하루 뒤 날짜를 반환--//
 	public Day succeedingDay() {
 		Day temp = new Day(this);
@@ -171,6 +179,7 @@ public class Day {
 			date = dayOfMonth(year, month);
 		}
 	}
+	
 	//--하루 앞 날짜를 반환--//
 	public Day precedingDay() {
 		Day temp = new Day(this);
